@@ -1,0 +1,79 @@
+name: Build & Release StudyHub Desktop
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Node Dependencies & Build Frontend
+        run: |
+          npm ci
+          npm run build
+
+      - name: Install Python Dependencies & PyInstaller
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Package Standalone Windows Executable
+        run: |
+          pyinstaller --noconsole --onefile `
+            --name "StudyHub" `
+            --icon "StudyHub.ico" `
+            --add-data "dist;dist" `
+            --hidden-import "webview" `
+            --hidden-import "yt_dlp" `
+            --hidden-import "imageio_ffmpeg" `
+            --hidden-import "PIL" `
+            --distpath "release" `
+            --workpath "build-cache" `
+            --clean `
+            main.py
+
+      - name: Create Release Archive (ZIP)
+        run: |
+          Compress-Archive -Path release\StudyHub.exe -DestinationPath release\StudyHub-Windows-x64.zip
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: StudyHub-Windows-x64
+          path: release/StudyHub.exe
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release/StudyHub.exe
+            release/StudyHub-Windows-x64.zip
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

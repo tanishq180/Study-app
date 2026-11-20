@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF007A" />
+      <stop offset="35%" stop-color="#7928CA" />
+      <stop offset="70%" stop-color="#4F46E5" />
+      <stop offset="100%" stop-color="#00DFD8" />
+    </linearGradient>
+    <linearGradient id="shineGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0" />
+    </linearGradient>
+    <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Outer rounded square with vibrant gradient -->
+  <rect x="4" y="4" width="56" height="56" rx="16" fill="url(#bgGrad)" />
+  <rect x="4" y="4" width="56" height="28" rx="16" fill="url(#shineGrad)" />
+
+  <!-- Inner dark cutout for contrast -->
+  <rect x="7" y="7" width="50" height="50" rx="13" fill="#090a0f" fill-opacity="0.5" />
+
+  <!-- Book icon paths -->
+  <path d="M18 20C18 17.5 21 17 26 17C30.5 17 32 18.5 32 20V43C32 41.5 30.5 40 26 40C21 40 18 40.5 18 43V20Z" fill="white" fill-opacity="0.9" />
+  <path d="M46 20C46 17.5 43 17 38 17C33.5 17 32 18.5 32 20V43C32 41.5 33.5 40 38 40C43 40 46 40.5 46 43V20Z" fill="white" fill-opacity="0.75" />
+
+  <!-- Central luminous play emblem -->
+  <circle cx="32" cy="30" r="12" fill="url(#bgGrad)" filter="url(#neonGlow)" />
+  <polygon points="29,24 38,30 29,36" fill="#FFFFFF" />
+</svg>
